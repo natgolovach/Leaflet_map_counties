@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src='https://d3js.org/d3.v3.min.js'></script>
+  <title>Leaflet Map / WI Counties</title>
+  <!-- External Stylesheets -->
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+  
+  	<style>
+		<!--  CSS rules here -->
+	
+	.map-wrapper {
+		position: relative;
+	}
+
+	#map {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+	}
+	</style>
+  
+</head>
+<body>
+    <!-- Add the Leaflet JavaScript library -->
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <!-- Our web map and content will go here -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <div class="map-wrapper">
+		<div id="map"></div>
+	</div>
+    <script>
+
+    // Create variable to hold map element, give initial settings to map
+    var central_coordinates=[44.500000,  -89.500000]
+
+    var map = L.map('map',{ center: central_coordinates, zoom: 7});
+    // Add OpenStreetMap tile layer to map element
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' })
+		.addTo(map);
+    
+	//path to the geojson file
+    var url="https://raw.githubusercontent.com/natgolovach/Leaflet_map_counties/main/wi_counties_geojson.json"
+	
+	//addiong json file by each feature on the map with tooltip
+	d3.json(url, function(data) {
+		console.log(data);
+		L.geoJSON(data, {
+			onEachFeature: function (feature, layer) { layer.bindTooltip("<b>"+feature.properties.county_nam+"</b></br>"+feature.properties.dnr_region, {mouseOver: true, direction:"center"});}
+		})
+			.addTo(map)
+	});
+
+   
+
+    </script>
+    
+</body>
+</html>
